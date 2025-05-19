@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulasi Hacking</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: lime;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px lime;
+        }
+        #input-area {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            background-color: #222;
+            color: lime;
+            border: 1px solid lime;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            width: 300px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: lime;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #00ff00;
+        }
+        #output-area {
+            margin-top: 30px;
+            text-align: center;
+        }
+        #result {
+            background-color: #222;
+            color: lime;
+            padding: 15px;
+            border: 1px solid lime;
+            border-radius: 5px;
+            font-size: 1em;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        #copy-button {
+            padding: 8px 15px;
+            background-color: #333;
+            color: lime;
+            border: 1px solid lime;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        #copy-button:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulasi Analisis Kelemahan</h1>
+
+    <div id="input-area">
+        Masukkan nama website:
+        <input type="text" id="website-name" placeholder="contoh.com">
+        <button onclick="analyzeWebsite()">Analisis</button>
+    </div>
+
+    <div id="output-area" style="display: none;">
+        <h2>Kelemahan Ditemukan:</h2>
+        <div id="result"></div>
+        <button id="copy-button" onclick="copyToClipboard()">Salin</button>
+    </div>
+
+    <script>
+        function analyzeWebsite() {
+            const websiteNameInput = document.getElementById('website-name');
+            const websiteName = websiteNameInput.value;
+            const outputArea = document.getElementById('output-area');
+            const resultDiv = document.getElementById('result');
+
+            if (websiteName.trim() !== "") {
+                // Simulasi analisis (tidak benar-benar menganalisis)
+                resultDiv.textContent = `Menganalisis ${websiteName}... Kelemahan ditemukan:\nl.script.consl.switch.hackedbyfatur.l.scriptl.html`;
+                outputArea.style.display = 'block';
+            } else {
+                resultDiv.textContent = "Masukkan nama website terlebih dahulu.";
+                outputArea.style.display = 'block';
+            }
+        }
+
+        function copyToClipboard() {
+            const resultText = document.getElementById('result').textContent;
+            navigator.clipboard.writeText(resultText)
+                .then(() => {
+                    alert('Teks berhasil disalin!');
+                })
+                .catch(err => {
+                    console.error('Gagal menyalin teks: ', err);
+                    alert('Gagal menyalin teks.');
+                });
+        }
+    </script>
+</body>
+</html>

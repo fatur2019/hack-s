@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulasi SQL Injection</title>
+    <style>
+        body {
+            font-family: 'Consolas', monospace; /* Font monospace untuk kesan terminal */
+            background: linear-gradient(to bottom, #000000, #36454F); /* Gradien gelap */
+            color: #00FF00; /* Teks hijau khas hacker */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* Memastikan background menutupi seluruh tinggi viewport */
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #00FF00;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px #00FF00; /* Efek glow pada teks */
+        }
+        .input-container {
+            background-color: rgba(0, 0, 0, 0.7); /* Latar belakang semi-transparan */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 255, 0, 0.2); /* Efek shadow hijau */
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid #00FF00; /* Border hijau */
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #00FF00;
+            font-weight: bold;
+        }
+        #urlInput {
+            padding: 12px;
+            width: 400px;
+            margin-bottom: 20px;
+            border: 1px solid #00FF00;
+            border-radius: 4px;
+            background-color: #222;
+            color: #00FF00;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        #urlInput::placeholder {
+            color: #00FF0080; /* Placeholder lebih redup */
+        }
+        #injectButton {
+            background-color: #00FF00;
+            color: #000;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        #injectButton:hover {
+            background-color: #00C800; /* Sedikit lebih gelap saat hover */
+        }
+        #loading {
+            display: none;
+            margin-top: 20px;
+            font-style: italic;
+            color: #00FF00;
+            font-size: 18px;
+            text-shadow: 0 0 3px #00FF00;
+        }
+        #results {
+            margin-top: 40px;
+            border: 2px solid #00FF00;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 8px;
+            display: none;
+            width: 500px;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 255, 0, 0.2);
+        }
+        #results h2 {
+            color: #00FF00;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        .data-row {
+            margin-bottom: 15px;
+            color: #00FF00;
+            font-size: 16px;
+        }
+        .data-row strong {
+            font-weight: bold;
+            color: #00FF00;
+            margin-right: 10px;
+        }
+
+        /* Animasi "Mencari" yang lebih keren */
+        @keyframes searching {
+            0% { content: "[+] Searching database......."; }
+            25% { content: "[+] Searching database.++++++"; }
+            50% { content: "[+] Searching database++++++++"; }
+            75% { content: "[+] Searching database++++++."; }
+            100% { content: "[+] Searching database......."; }
+        }
+        #loading::before {
+            content: "[+] ";
+            color: #00FF00;
+        }
+        #loading::after {
+            content: "Searching database.......";
+            animation: searching 1s infinite;
+            color: #00FF00;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulasi SQL Injection Sederhana</h1>
+
+    <div class="input-container">
+        <label for="urlInput">Masukkan URL:</label>
+        <input type="text" id="urlInput" placeholder="contoh: http://example.com/user?id=1">
+        <button id="injectButton">Inject!</button>
+    </div>
+
+    <p id="loading"></p>
+
+    <div id="results">
+        <h2>Hasil "Database"</h2>
+        <div class="data-row"><strong>Username:</strong> <span id="username"></span></div>
+        <div class="data-row"><strong>Password:</strong> <span id="password"></span></div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const injectButton = document.getElementById('injectButton');
+        const loadingText = document.getElementById('loading');
+        const resultsDiv = document.getElementById('results');
+        const usernameSpan = document.getElementById('username');
+        const passwordSpan = document.getElementById('password');
+
+        injectButton.addEventListener('click', () => {
+            const url = urlInput.value;
+            if (url.trim() !== "") {
+                loadingText.style.display = 'block';
+                resultsDiv.style.display = 'none';
+
+                setTimeout(() => {
+                    loadingText.style.display = 'none';
+                    resultsDiv.style.display = 'block';
+
+                    const fakeUsername = "root"; // Lebih umum untuk database
+                    const fakePassword = "toor123"; // Kebalikan dari root, sering digunakan untuk testing
+
+                    usernameSpan.textContent = fakeUsername;
+                    passwordSpan.textContent = fakePassword;
+                }, 2500); // Sedikit penyesuaian waktu
+            } else {
+                alert('Masukkan URL terlebih dahulu!');
+            }
+        });
+    </script>
+</body>
+</html>
