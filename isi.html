@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Hacking</title>
+    <title>Simulasi Hacking dengan Animasi</title>
     <style>
         body {
             font-family: 'Courier New', monospace;
@@ -54,6 +54,7 @@
         #output-area {
             margin-top: 30px;
             text-align: center;
+            opacity: 0; /* Awalnya tidak terlihat */
         }
         #result {
             background-color: #222;
@@ -80,10 +81,34 @@
         #copy-button:hover {
             background-color: #444;
         }
+
+        /* Animasi "Menganalisis..." */
+        #loading-animation {
+            font-size: 1.2em;
+            color: lime;
+            margin-top: 20px;
+            display: none; /* Awalnya tidak terlihat */
+        }
+        .blinking-cursor {
+            animation: blink-cursor 0.8s step-end infinite;
+        }
+        @keyframes blink-cursor {
+            from, to { color: transparent; }
+            50% { color: lime; }
+        }
+
+        /* Animasi Fade In untuk Hasil */
+        .fade-in {
+            animation: fadein 1s ease-in forwards;
+        }
+        @keyframes fadein {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <h1>Analisis Kelemahan</h1>
+    <h1>Simulasi Analisis Kelemahan</h1>
 
     <div id="input-area">
         Masukkan nama website:
@@ -91,26 +116,42 @@
         <button onclick="analyzeWebsite()">Analisis</button>
     </div>
 
-    <div id="output-area" style="display: none;">
+    <div id="loading-animation">Menganalisis<span class="blinking-cursor">_</span></div>
+
+    <div id="output-area">
         <h2>Kelemahan Ditemukan:</h2>
         <div id="result"></div>
         <button id="copy-button" onclick="copyToClipboard()">Salin</button>
     </div>
 
     <script>
+        const websiteNameInput = document.getElementById('website-name');
+        const outputArea = document.getElementById('output-area');
+        const resultDiv = document.getElementById('result');
+        const loadingAnimation = document.getElementById('loading-animation');
+
         function analyzeWebsite() {
-            const websiteNameInput = document.getElementById('website-name');
             const websiteName = websiteNameInput.value;
-            const outputArea = document.getElementById('output-area');
-            const resultDiv = document.getElementById('result');
 
             if (websiteName.trim() !== "") {
-                // Simulasi analisis (tidak benar-benar menganalisis)
-                resultDiv.textContent = `Menganalisis ${websiteName}... Kelemahan ditemukan:\nl.script.consl.switch.hackedbyfatur.l.scriptl.html`;
-                outputArea.style.display = 'block';
+                // Tampilkan animasi loading
+                loadingAnimation.style.display = 'block';
+                outputArea.style.display = 'none'; // Sembunyikan hasil sebelumnya
+
+                // Simulasi waktu analisis (misalnya 2 detik)
+                setTimeout(() => {
+                    // Sembunyikan animasi loading
+                    loadingAnimation.style.display = 'none';
+
+                    // Tampilkan hasil
+                    resultDiv.textContent = `Menganalisis ${websiteName}... Kelemahan ditemukan:\nl.script.consl.switch.hackedbyfatur.l.scriptl.html`;
+                    outputArea.style.display = 'block';
+                    outputArea.classList.add('fade-in'); // Tambahkan kelas animasi
+                }, 2000);
             } else {
                 resultDiv.textContent = "Masukkan nama website terlebih dahulu.";
                 outputArea.style.display = 'block';
+                outputArea.classList.add('fade-in');
             }
         }
 
