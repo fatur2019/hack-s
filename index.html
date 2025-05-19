@@ -1,119 +1,126 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ygSQL Injection</title>
+    <title>SQL Injection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: 'Consolas', monospace; /* Font monospace untuk kesan terminal */
-            background: linear-gradient(to bottom, #000000, #36454F); /* Gradien gelap */
-            color: #00FF00; /* Teks hijau khas hacker */
+            font-family: 'Consolas', monospace;
+            background: linear-gradient(to bottom, #000000, #36454F);
+            color: #00FF00;
             margin: 0;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* Memastikan background menutupi seluruh tinggi viewport */
+            min-height: 100vh;
             box-sizing: border-box;
         }
         h1 {
             color: #00FF00;
             margin-bottom: 30px;
-            text-shadow: 0 0 5px #00FF00; /* Efek glow pada teks */
+            text-shadow: 0 0 5px #00FF00;
         }
         .input-container {
-            background-color: rgba(0, 0, 0, 0.7); /* Latar belakang semi-transparan */
-            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px; /* Padding dikurangi untuk mobile */
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 255, 0, 0.2); /* Efek shadow hijau */
+            box-shadow: 0 4px 10px rgba(0, 255, 0, 0.2);
             margin-bottom: 30px;
             text-align: center;
-            border: 1px solid #00FF00; /* Border hijau */
+            border: 1px solid #00FF00;
+            width: 80%; /* Lebar responsif */
+            max-width: 400px; /* Lebar maksimum */
         }
         label {
             display: block;
             margin-bottom: 10px;
             color: #00FF00;
             font-weight: bold;
+            font-size: 1em; /* Ukuran font disesuaikan */
         }
         #urlInput {
-            padding: 12px;
-            width: 400px;
+            padding: 10px; /* Padding dikurangi untuk mobile */
+            width: calc(100% - 22px); /* Lebar responsif dengan perhitungan border */
             margin-bottom: 20px;
             border: 1px solid #00FF00;
             border-radius: 4px;
             background-color: #222;
             color: #00FF00;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 1em; /* Ukuran font disesuaikan */
         }
         #urlInput::placeholder {
-            color: #00FF0080; /* Placeholder lebih redup */
+            color: #00FF0080;
         }
         #injectButton {
             background-color: #00FF00;
             color: #000;
-            padding: 12px 30px;
+            padding: 10px 25px; /* Padding dikurangi untuk mobile */
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1em; /* Ukuran font disesuaikan */
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
         #injectButton:hover {
-            background-color: #00C800; /* Sedikit lebih gelap saat hover */
+            background-color: #00C800;
         }
         #loading {
             display: none;
             margin-top: 20px;
             font-style: italic;
             color: #00FF00;
-            font-size: 18px;
+            font-size: 1em; /* Ukuran font disesuaikan */
             text-shadow: 0 0 3px #00FF00;
         }
         #results {
-            margin-top: 40px;
+            margin-top: 30px; /* Margin dikurangi untuk mobile */
             border: 2px solid #00FF00;
             background-color: rgba(0, 0, 0, 0.8);
-            padding: 30px;
+            padding: 20px; /* Padding dikurangi untuk mobile */
             border-radius: 8px;
             display: none;
-            width: 500px;
+            width: 80%; /* Lebar responsif */
+            max-width: 400px; /* Lebar maksimum */
             text-align: left;
             box-shadow: 0 4px 10px rgba(0, 255, 0, 0.2);
+            box-sizing: border-box; /* Penting untuk lebar responsif dengan padding */
         }
         #results h2 {
             color: #00FF00;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Margin dikurangi untuk mobile */
             text-align: center;
+            font-size: 1.2em; /* Ukuran font disesuaikan */
             text-shadow: 0 0 5px #00FF00;
         }
         .data-row {
-            margin-bottom: 15px;
+            margin-bottom: 10px; /* Margin dikurangi untuk mobile */
             color: #00FF00;
-            font-size: 16px;
+            font-size: 0.9em; /* Ukuran font disesuaikan */
         }
         .data-row strong {
             font-weight: bold;
             color: #00FF00;
-            margin-right: 10px;
+            margin-right: 8px; /* Margin dikurangi untuk mobile */
         }
 
-        /* Animasi "Mencari" yang lebih keren */
+        /* Animasi "Mencari" yang lebih keren untuk mobile */
         @keyframes searching {
-            0% { content: "[+] Searching database......."; }
-            25% { content: "[+] Searching database.++++++"; }
-            50% { content: "[+] Searching database++++++++"; }
-            75% { content: "[+] Searching database++++++."; }
-            100% { content: "[+] Searching database......."; }
+            0% { content: "[+] Searching..."; }
+            25% { content: "[+] Searching...."; }
+            50% { content: "[+] Searching......"; }
+            75% { content: "[+] Searching....."; }
+            100% { content: "[+] Searching..."; }
         }
         #loading::before {
             content: "[+] ";
             color: #00FF00;
         }
         #loading::after {
-            content: "Searching database.......";
+            content: "Searching...";
             animation: searching 1s infinite;
             color: #00FF00;
         }
@@ -154,12 +161,12 @@
                     loadingText.style.display = 'none';
                     resultsDiv.style.display = 'block';
 
-                    const fakeUsername = "game123"; // Lebih umum untuk database
-                    const fakePassword = "game456"; // Kebalikan dari root, sering digunakan untuk testing
+                    const fakeUsername = "root";
+                    const fakePassword = "toor123";
 
                     usernameSpan.textContent = fakeUsername;
                     passwordSpan.textContent = fakePassword;
-                }, 2500); // Sedikit penyesuaian waktu
+                }, 2500);
             } else {
                 alert('Masukkan URL terlebih dahulu!');
             }
